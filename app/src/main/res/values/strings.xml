@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="show_multi_dialog">显示多选对话框</string>
+    <string name="show_single_dialog">显示单选对话框</string>
+</resources>
