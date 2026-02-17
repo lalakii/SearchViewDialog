@@ -1,17 +1,18 @@
 import com.android.build.gradle.internal.tasks.AarMetadataTask
-
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("org.jlleitschuh.gradle.ktlint")
     `maven-publish`
     signing
+    id("cn.lalaki.central") version "2.0.2"
 }
 
 android {
     namespace = "cn.lalaki.dialog"
-    compileSdk = 34
-    version = 3.1
+    compileSdk = 36
+    version = 3.2
     defaultConfig {
         minSdk = 21
     }
@@ -24,13 +25,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions.jvmTarget = "17"
-    buildToolsVersion = "35.0.0 rc4"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
+        }
+    }
+    buildToolsVersion = "36.1.0"
 }
 
 dependencies {
-    implementation("androidx.recyclerview:recyclerview:1.4.0-alpha01")
-    implementation("cn.lalaki:pinyin4j-chinese-simplified:1.0.6")
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
+    implementation("cn.lalaki:pinyin4j-chinese-simplified:1.0.7")
 }
 configurations.all {
     exclude("androidx.profileinstaller", "profileinstaller")
@@ -43,20 +48,14 @@ tasks.configureEach {
         enabled = false
     }
 }
+centralPortalPlus{
+    tokenXml = uri("D:\\BIN\\token.txt")
+}
 publishing {
     repositories {
         maven {
             name = "localPluginRepository"
-            val publishToLocal = false
-            if (publishToLocal) {
-                url = uri("D:\\repo\\")
-            } else {
-                url = uri("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/")
-                credentials {
-                    username = "iamverycute"
-                    password = System.getenv("my_final_password")
-                }
-            }
+            url = uri("D:\\repo\\")
         }
     }
     publications {
@@ -90,7 +89,7 @@ publishing {
                 developers {
                     developer {
                         name = "lalakii"
-                        email = "dazen@189.cn"
+                        email = "i@lalaki.cn"
                     }
                 }
                 scm {
@@ -105,10 +104,4 @@ publishing {
 signing {
     useGpgCmd()
     sign(publishing.publications["release"])
-}
-tasks.register("MySign") {
-    signing {
-        useGpgCmd()
-        file("C:\\Users\\sa\\Desktop\\lalaki-assets\\web").listFiles()!!.map { sign(it) }
-    }
 }

@@ -129,11 +129,14 @@ class SearchViewDialog(
         }
         for (it in list) {
             val drawable = it.drawable
-            if (drawable is BitmapDrawable && !drawable.bitmap.isRecycled) {
-                drawable.bitmap?.recycle()
+            if (drawable is BitmapDrawable) {
+                val dBmp = drawable.bitmap
+                if (dBmp != null && !dBmp.isRecycled) {
+                    dBmp.recycle()
+                }
             }
         }
-        adapter?.list?.clear()
+        list.clear()
         adapter?.list = null
         adapter = null
         d?.window?.decorView?.visibility = View.GONE

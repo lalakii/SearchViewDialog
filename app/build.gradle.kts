@@ -1,6 +1,7 @@
 import com.android.build.gradle.tasks.PackageAndroidArtifact
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.android.application")
@@ -8,12 +9,12 @@ plugins {
 }
 android {
     namespace = "cn.lalaki.sample.dialog"
-    compileSdkPreview = "VanillaIceCream"
+    compileSdk  = 36
     defaultConfig {
         applicationId = namespace
         minSdk = 21
         //noinspection EditedTargetSdkVersion
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName =
             "$versionCode.${
@@ -56,7 +57,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_20
         targetCompatibility = JavaVersion.VERSION_20
     }
-    kotlinOptions.jvmTarget = "20"
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_20
+        }
+    }
     packaging.resources.excludes.addAll(
         mutableSetOf(
             "META-INF",
@@ -66,11 +71,11 @@ android {
             "kotlin-tooling-metadata.json",
         ),
     )
-    buildToolsVersion = "35.0.0 rc4"
+    buildToolsVersion = "36.1.0"
 }
 
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.7.1")
     implementation(project(":library"))
 }
 
