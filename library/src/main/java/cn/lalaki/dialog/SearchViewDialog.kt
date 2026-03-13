@@ -105,7 +105,7 @@ class SearchViewDialog(
                     ) {
                         true
                     } else {
-                        it.pinyin?.contains(newText, ignoreCase = true) == true
+                        it.pinyin?.contains(newText.replace(" ", ""), ignoreCase = true) == true
                     }
                 }?.toMutableList()
         } else {

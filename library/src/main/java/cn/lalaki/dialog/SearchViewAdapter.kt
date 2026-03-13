@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import net.sourceforge.pinyin4j.BasePinyinHelper
 
+
 class SearchViewAdapter(
     val ctx: SearchViewDialog,
     var list: MutableList<DataModel>?,
@@ -27,10 +28,15 @@ class SearchViewAdapter(
                 object :
                     BasePinyinHelper() {
                     override fun onPinyinStringArray(pinyinList: MutableList<Array<String>>) {
-                        pinyinList.forEach {
-                            dataModel.pinyin += it.joinToString("")
+                        val pinyinBuilder = StringBuilder()
+                        val firstCharsBuilder = StringBuilder()
+                        for (it in pinyinList) {
+                            val pinyin1 = it.first()
+                            pinyinBuilder.append(pinyin1)
+                            firstCharsBuilder.append(pinyin1.first())
                         }
-                        dataModel.pinyin = dataModel.pinyin?.replace(Regex("\\d+"), "")
+                        val allPinyin = pinyinBuilder.append(firstCharsBuilder)
+                        dataModel.pinyin = allPinyin.replace(Regex("\\d+"), "")
                     }
                 },
             )

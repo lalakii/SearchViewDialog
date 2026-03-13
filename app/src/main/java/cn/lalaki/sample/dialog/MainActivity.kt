@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity(), SearchViewDialog.OnDataEventListener {
         list.add(DataModel("0", "下雪"))
         list.add(DataModel("0", "烤火"))
         list.add(DataModel("0", "冰雹"))
+        list.add(DataModel("0", "喜上眉梢"))
+        list.add(DataModel("0", "多愁善感"))
+        list.add(DataModel("0", "语重心长"))
         findViewById<Button>(R.id.show_single_dialog).setOnClickListener {
             val dialog = SearchViewDialog(this)
             dialog.title = "Choose item"

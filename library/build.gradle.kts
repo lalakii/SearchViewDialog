@@ -1,18 +1,16 @@
-import com.android.build.gradle.internal.tasks.AarMetadataTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("org.jlleitschuh.gradle.ktlint")
-    `maven-publish`
-    signing
-    id("cn.lalaki.central") version "2.0.2"
+    id("cn.lalaki.central") version "2.0.7"
 }
 
 android {
     namespace = "cn.lalaki.dialog"
     compileSdk = 36
-    version = 3.2
+    version = 3.5
     defaultConfig {
         minSdk = 21
     }
@@ -30,23 +28,15 @@ android {
             jvmTarget = JvmTarget.JVM_17
         }
     }
-    buildToolsVersion = "36.1.0"
+    buildToolsVersion = "37.0.0 rc2"
 }
 
 dependencies {
-    implementation("androidx.recyclerview:recyclerview:1.4.0")
     implementation("cn.lalaki:pinyin4j-chinese-simplified:1.0.7")
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
 }
 configurations.all {
     exclude("androidx.profileinstaller", "profileinstaller")
-}
-tasks.withType<AarMetadataTask> {
-    isEnabled = false
-}
-tasks.configureEach {
-    if (name.contains("checkDebugAndroidTestAarMetadata")) {
-        enabled = false
-    }
 }
 centralPortalPlus{
     tokenXml = uri("D:\\BIN\\token.txt")

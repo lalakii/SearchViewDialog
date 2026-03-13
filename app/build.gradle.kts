@@ -9,7 +9,7 @@ plugins {
 }
 android {
     namespace = "cn.lalaki.sample.dialog"
-    compileSdk  = 36
+    compileSdkPreview = "CinnamonBun"
     defaultConfig {
         applicationId = namespace
         minSdk = 21
@@ -71,7 +71,7 @@ android {
             "kotlin-tooling-metadata.json",
         ),
     )
-    buildToolsVersion = "36.1.0"
+    buildToolsVersion = "37.0.0 rc2"
 }
 
 dependencies {
@@ -81,13 +81,4 @@ dependencies {
 
 tasks.withType<PackageAndroidArtifact> {
     doFirst { appMetadata.asFile.get().writeText("") }
-}
-
-tasks.configureEach {
-    if (arrayOf("aarmetadata", "artprofile", "debug", "jni", "native").any {
-            name.lowercase().contains(it)
-        }
-    ) {
-        enabled = false
-    }
 }
