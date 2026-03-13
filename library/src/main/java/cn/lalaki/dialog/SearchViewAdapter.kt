@@ -31,9 +31,13 @@ class SearchViewAdapter(
                         val pinyinBuilder = StringBuilder()
                         val firstCharsBuilder = StringBuilder()
                         for (it in pinyinList) {
-                            val pinyin1 = it.first()
-                            pinyinBuilder.append(pinyin1)
-                            firstCharsBuilder.append(pinyin1.first())
+                            if (it.isNotEmpty()) {
+                                val pinyin1 = it.first()
+                                pinyinBuilder.append(pinyin1)
+                                if (pinyin1.isNotEmpty()) {
+                                    firstCharsBuilder.append(pinyin1.first())
+                                }
+                            }
                         }
                         val allPinyin = pinyinBuilder.append(firstCharsBuilder)
                         dataModel.pinyin = allPinyin.replace(Regex("\\d+"), "")

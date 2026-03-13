@@ -19,7 +19,7 @@
 
     ```kotlin
     dependencies {
-        implementation("cn.lalaki:SearchViewDialog:3.5")
+        implementation("cn.lalaki:SearchViewDialog:3.6")
     }
     ```
 

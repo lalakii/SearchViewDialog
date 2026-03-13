@@ -10,7 +10,7 @@ plugins {
 android {
     namespace = "cn.lalaki.dialog"
     compileSdk = 36
-    version = 3.5
+    version = 3.6
     defaultConfig {
         minSdk = 21
     }
