@@ -2,4 +2,6 @@
 <resources>
     <string name="show_multi_dialog">显示多选对话框</string>
     <string name="show_single_dialog">显示单选对话框</string>
+    <string name="end">没有更多了</string>
+    <string name="search">输入要搜索的内容…</string>
 </resources>

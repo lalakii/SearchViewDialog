@@ -14,7 +14,7 @@ android {
         applicationId = namespace
         minSdk = 21
         //noinspection EditedTargetSdkVersion
-        targetSdk = 36
+        targetSdk = 37
         versionCode = 1
         versionName =
             "$versionCode.${
@@ -71,7 +71,7 @@ android {
             "kotlin-tooling-metadata.json",
         ),
     )
-    buildToolsVersion = "37.0.0 rc2"
+    buildToolsVersion = "37.0.0"
 }
 
 dependencies {

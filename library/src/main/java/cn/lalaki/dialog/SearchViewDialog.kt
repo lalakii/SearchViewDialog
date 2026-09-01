@@ -15,6 +15,7 @@ import android.widget.FrameLayout
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.util.Locale
 
 @Suppress("MemberVisibilityCanBePrivate")
 class SearchViewDialog(
@@ -23,19 +24,23 @@ class SearchViewDialog(
     var radioDefault: DataModel? = null
     var drawablePadding: Int? = null
     var drawableSize: Int? = null
-    var data: MutableList<DataModel>? = null
+    var data: List<DataModel>? = null
     var autoRecycleDrawable = true
     var autoRecycleCheckedDrawable = false
     var showRadioIcon = false
     var hideSearchView = false
     var title: String? = null
     var textColor = 0
+    var searchViewBackColor = 0
     private var d: DialogEx? = DialogEx()
     var isMultiSelect = false
     private var search: SearchView
     private var parent: RecyclerView
     var listener: OnDataEventListener? = null
     var customView: View? = null
+    var searchHint = 0
+    var endTextRes = 0
+    var needPinyin = true
     private var adapter: SearchViewAdapter? = null
 
     init {
@@ -70,10 +75,24 @@ class SearchViewDialog(
         }
         if (hideSearchView) {
             search.visibility = View.GONE
+            d!!.findViewById<FrameLayout>(R.id.lalaki_search_bg).visibility = View.GONE
         } else {
+            if (searchViewBackColor != 0) {
+                search.setBackgroundColor(searchViewBackColor)
+                d!!.findViewById<FrameLayout>(R.id.lalaki_search_bg)
+                    .setBackgroundColor(searchViewBackColor)
+            }
+            if (searchHint != 0) {
+                search.queryHint = d!!.context.getString(searchHint)
+            }
             search.setOnQueryTextListener(this)
         }
         if (data != null) {
+            if (endTextRes != 0) {
+                val endView = d!!.findViewById<TextView>(R.id.end_view)
+                endView.setText(endTextRes)
+                endView.visibility = View.VISIBLE
+            }
             adapter = SearchViewAdapter(this, data, d!!.layoutInflater)
             parent.adapter = adapter
             if (!title.isNullOrEmpty()) {
@@ -94,20 +113,15 @@ class SearchViewDialog(
 
     @Suppress("NotifyDataSetChanged")
     override fun onQueryTextChange(newText: String?): Boolean {
-        if (newText?.trim()?.isNotEmpty() == true) {
-            val newList = data?.toMutableList()
-            adapter?.list =
-                newList?.filter {
-                    if (it.value.contains(
-                            newText,
-                            ignoreCase = true,
-                        )
-                    ) {
-                        true
-                    } else {
-                        it.pinyin?.contains(newText.replace(" ", ""), ignoreCase = true) == true
-                    }
-                }?.toMutableList()
+        val query = newText?.trim()
+        if (!query.isNullOrEmpty()) {
+            val lowerQuery = query.lowercase(Locale.getDefault())
+            val pinyinQuery = lowerQuery.replace(" ", "")
+            val filteredList = data?.filter { item ->
+                item.value.lowercase(Locale.getDefault()).contains(lowerQuery) ||
+                        item.pinyin?.lowercase(Locale.getDefault())?.contains(pinyinQuery) == true
+            }
+            adapter?.list = filteredList
         } else {
             adapter?.list = data
         }
@@ -124,10 +138,11 @@ class SearchViewDialog(
     private fun recycle() {
         if (!autoRecycleDrawable) return
         val list = adapter?.list ?: return
-        if (!autoRecycleCheckedDrawable && radioDefault != null) {
-            list.remove(radioDefault)
-        }
+
         for (it in list) {
+            if (!autoRecycleCheckedDrawable && it === radioDefault) {
+                continue
+            }
             val drawable = it.drawable
             if (drawable is BitmapDrawable) {
                 val dBmp = drawable.bitmap
@@ -136,7 +151,6 @@ class SearchViewDialog(
                 }
             }
         }
-        list.clear()
         adapter?.list = null
         adapter = null
         d?.window?.decorView?.visibility = View.GONE
@@ -183,14 +197,17 @@ class SearchViewDialog(
 
     override fun onDismiss(dialog: DialogInterface?) {
         if (isMultiSelect) {
-            val checkedItems = data?.filter { it.isChecked }
-            if (checkedItems != null) {
-                if (autoRecycleCheckedDrawable) {
-                    data = checkedItems.toMutableList()
-                } else {
-                    data?.removeAll(checkedItems)
+            val currentData = data
+            if (currentData != null) {
+                val checkedItems = currentData.filter { it.isChecked }
+                if (checkedItems.isNotEmpty()) {
+                    data = if (autoRecycleCheckedDrawable) {
+                        checkedItems
+                    } else {
+                        currentData.filter { !it.isChecked }
+                    }
+                    listener?.onCheckedItems(checkedItems)
                 }
-                listener?.onCheckedItems(checkedItems)
             }
         }
         recycle()

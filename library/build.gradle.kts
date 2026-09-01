@@ -4,13 +4,13 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("org.jlleitschuh.gradle.ktlint")
-    id("cn.lalaki.central") version "2.0.7"
+    id("cn.lalaki.central") version "2.0.8"
 }
 
 android {
     namespace = "cn.lalaki.dialog"
-    compileSdk = 36
-    version = 3.6
+    compileSdkPreview = "CinnamonBun"
+    version = 3.7
     defaultConfig {
         minSdk = 21
     }
@@ -28,7 +28,7 @@ android {
             jvmTarget = JvmTarget.JVM_17
         }
     }
-    buildToolsVersion = "37.0.0 rc2"
+    buildToolsVersion = "37.0.0"
 }
 
 dependencies {
